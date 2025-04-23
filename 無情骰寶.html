@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>骰子總和計算</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      background-color: #fffbe6;
+      padding: 50px;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    .dice-container {
+      font-size: 100px;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 30px 0 10px 0;
+    }
+    .sum {
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 22px;
+      border-radius: 10px;
+      border: none;
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+    }
+    .shake {
+      animation: shake 0.5s;
+    }
+    @keyframes shake {
+      0% { transform: translateY(0); }
+      25% { transform: translateY(-10px); }
+      50% { transform: translateY(10px); }
+      75% { transform: translateY(-5px); }
+      100% { transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎲 骰子總和</h1>
+
+<div class="dice-container">
+  <div id="dice1">❓</div>
+  <div id="dice2">❓</div>
+</div>
+
+<div class="sum">總點數：<strong id="total">-</strong></div>
+
+<button onclick="rollDice()">擲骰子！</button>
+
+<script>
+  const diceEmoji = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+  function rollDice() {
+    const roll1 = Math.floor(Math.random() * 6);
+    const roll2 = Math.floor(Math.random() * 6);
+
+    const dice1 = document.getElementById('dice1');
+    const dice2 = document.getElementById('dice2');
+    const total = document.getElementById('total');
+
+    dice1.classList.add('shake');
+    dice2.classList.add('shake');
+
+    setTimeout(() => {
+      dice1.classList.remove('shake');
+      dice2.classList.remove('shake');
+
+      dice1.textContent = diceEmoji[roll1];
+      dice2.textContent = diceEmoji[roll2];
+
+      total.textContent = roll1 + roll2 + 2;
+    }, 500);
+  }
+</script>
+
+</body>
+</html>
