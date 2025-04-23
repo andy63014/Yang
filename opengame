@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>百家樂遊戲</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #2f4f4f; color: white; text-align: center; padding: 30px; }
+    button { margin: 10px; padding: 10px 20px; font-size: 16px; }
+    .result, .balance { margin-top: 20px; font-size: 18px; }
+    .cards { margin-top: 20px; font-size: 20px; line-height: 2; }
+    .card-row { margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>百家樂遊戲</h1>
+  <div>
+    <button onclick="startGame('player')">下注閒家</button>
+    <button onclick="startGame('banker')">下注莊家</button>
+    <button onclick="startGame('tie')">下注和局</button>
+  </div>
+  <div class="cards">
+    <div class="card-row" id="player-cards">閒家牌：</div>
+    <div class="card-row" id="banker-cards">莊家牌：</div>
+  </div>
+  <div class="result" id="result"></div>
+  <div class="balance" id="balance">籌碼：1000</div>
+
+  <script>
+    let balance = 1000;
+
+    function drawCard() {
+      let card = Math.floor(Math.random() * 13) + 1;
+      return card > 9 ? 0 : card;
+    }
+
+    function getScore(cards) {
+      return cards.reduce((a, b) => a + b, 0) % 10;
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function startGame(choice) {
+      document.getElementById('result').innerHTML = '';
+      document.getElementById('player-cards').innerHTML = '閒家牌：';
+      document.getElementById('banker-cards').innerHTML = '莊家牌：';
+
+      let playerCards = [];
+      let bankerCards = [];
+
+      // 發牌動畫過程
+      playerCards.push(drawCard());
+      document.getElementById('player-cards').innerHTML += playerCards[0] + ' ';
+      await delay(500);
+
+      bankerCards.push(drawCard());
+      document.getElementById('banker-cards').innerHTML += bankerCards[0] + ' ';
+      await delay(500);
+
+      playerCards.push(drawCard());
+      document.getElementById('player-cards').innerHTML += playerCards[1] + ' ';
+      await delay(500);
+
+      bankerCards.push(drawCard());
+      document.getElementById('banker-cards').innerHTML += bankerCards[1] + ' ';
+      await delay(500);
+
+      // 計算結果
+      let playerScore = getScore(playerCards);
+      let bankerScore = getScore(bankerCards);
+      let winner = 'tie';
+      if (playerScore > bankerScore) winner = 'player';
+      else if (bankerScore > playerScore) winner = 'banker';
+
+      let resultText = `閒家: ${playerScore}（${playerCards.join(', ')}） | ` +
+                       `莊家: ${bankerScore}（${bankerCards.join(', ')}）<br>`;
+
+      if (choice === winner) {
+        if (winner === 'tie') balance += 8 * 10;
+        else balance += 10;
+        resultText += `<strong>你贏了！</strong>`;
+      } else {
+        balance -= 10;
+        resultText += `<strong>你輸了！</strong>`;
+      }
+
+      document.getElementById('result').innerHTML = resultText;
+      document.getElementById('balance').textContent = `籌碼：${balance}`;
+    }
+  </script>
+</body>
+</html>
